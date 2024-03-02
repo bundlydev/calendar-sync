@@ -18,8 +18,14 @@
     "noUncheckedIndexedAccess": true,
     "baseUrl": ".",
     "paths": {
-      "~/*": ["./src/*"]
-    }
+      "@/*": ["./*"],
+      "@lib/*": ["./lib/*"]
+    },
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
   },
   "include": [
     "next-env.d.ts",
@@ -27,7 +33,8 @@
     "**/*.tsx",
     "**/*.cjs",
     "**/*.mjs",
-    ".eslintrc.cjs"
+    ".eslintrc.cjs",
+    ".next/types/**/*.ts"
   ],
   "exclude": ["node_modules"]
 }
