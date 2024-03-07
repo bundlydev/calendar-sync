@@ -7,7 +7,7 @@ import { z } from "zod";
 const server = z.object({
   DATABASE_URL: z.string().url(),
   NODE_ENV: z.enum(["development", "test", "production"]),
-  NEXTAUTH_SECRET:
+  AUTH_SECRET:
     process.env.NODE_ENV === "production"
       ? z.string().min(1)
       : z.string().min(1).optional(),
@@ -23,6 +23,7 @@ const server = z.object({
   // DISCORD_CLIENT_SECRET: z.string().optional(),
   AUTH_GOOGLE_ID: z.string().optional(),
   AUTH_GOOGLE_SECRET: z.string().optional(),
+  CALENDAR_SYNC_WEB_URL: z.string().optional(),
 });
 
 /**
@@ -42,13 +43,14 @@ const client = z.object({
 const processEnv = {
   DATABASE_URL: process.env.DATABASE_URL,
   NODE_ENV: process.env.NODE_ENV,
-  // NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
+  AUTH_SECRET: process.env.AUTH_SECRET,
   // NEXTAUTH_URL: process.env.NEXTAUTH_URL,
   // DISCORD_CLIENT_ID: process.env.DISCORD_CLIENT_ID,
   // DISCORD_CLIENT_SECRET: process.env.DISCORD_CLIENT_SECRET,
   // // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
   AUTH_GOOGLE_ID: process.env.AUTH_GOOGLE_ID,
   AUTH_GOOGLE_SECRET: process.env.AUTH_GOOGLE_SECRET,
+  CALENDAR_SYNC_WEB_URL: process.env.CALENDAR_SYNC_WEB_URL,
 };
 
 // Don't touch the part below

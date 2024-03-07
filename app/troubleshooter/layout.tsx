@@ -5,10 +5,9 @@ export default function Layout({
 }) {
   return (
     // I want my layout to be a section with a nav and the children in the middle of the page
-    <section className="flex flex-col items-center">
+    <section className="container flex flex-col">
       {/* Include shared UI here e.g. a header or sidebar */}
       <nav></nav>
-
       {children}
     </section>
   );

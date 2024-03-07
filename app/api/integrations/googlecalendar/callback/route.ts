@@ -151,12 +151,11 @@ export const GET = auth(async (req: NextAuthRequest) => {
   // First save credential to the database
   // What user?
   let user: {
-    id?: string;
-    email: string;
+    id?: string | null;
+    email: string | null;
   } | null = reqAuth.data.auth.user;
 
-  if (!user?.id) {
-    console.log({ user });
+  if (!user?.email) {
     const userFound = await prisma.user.findFirst({
       where: {
         email: user.email,
@@ -207,7 +206,7 @@ export const GET = auth(async (req: NextAuthRequest) => {
       id: true;
     };
   }>;
-  console.log({ calendarList: calendarList.data.data.etag });
+
   const findCredential = await prisma.credential.findFirst({
     where: {
       userId: user.id,
@@ -226,6 +225,13 @@ export const GET = auth(async (req: NextAuthRequest) => {
         providerId: provider.id,
         type: "calendar",
         externalId: calendarList.data.data.etag || "",
+        ...(tokenData.access_token && { token: tokenData.access_token }),
+        ...(tokenData.refresh_token && {
+          refreshToken: tokenData.refresh_token,
+        }),
+        ...(tokenData.expiry_date && {
+          expiresAt: new Date(tokenData.expiry_date),
+        }),
       },
     });
   } else {

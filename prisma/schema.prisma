@@ -68,7 +68,9 @@ model Credential {
     userId      String
     type        String
     providerId  String
-    token       Json?
+    token       String?
+    refreshToken String?
+    expiresAt   DateTime?
     externalId  String
     calendars Calendar[]
 

@@ -1,53 +1,88 @@
-import type { NextApiRequest, NextApiResponse } from "next";
 import { NextResponse } from "next/server";
 import { auth } from "@/auth";
+import GoogleAuth from "@/lib/auth/google";
+import { monthEnd, monthStart } from "@formkit/tempo";
 import { prisma } from "@lib/prisma";
 import { google } from "googleapis";
 import type { NextAuthRequest } from "next-auth/lib";
 
-export const GET = async (req: NextApiRequest, res: NextApiResponse) => {
-  const session = await auth(req, res);
-
-  if (session) {
-    // Signed in
-    console.log("ReqAuth", JSON.stringify(session, null, 2));
-    // return res.json("This is protected content.");
-  } else {
-    // Not Signed in
-    // res.status(401);
-    return NextResponse.json({ auth: false });
+export const GET = auth(async (req: NextAuthRequest) => {
+  if (!req.auth || !req.auth.user.id) {
+    return NextResponse.json({ message: "Not authenticated" }, { status: 401 });
   }
 
-  // Read credentials from DB
-  const credential = await prisma.credential.findFirst({
+  // Read all credentials from DB
+  const credentials = await prisma.credential.findMany({
+    select: {
+      refreshToken: true,
+    },
     where: {
-      userId: session.user?.id,
+      type: "calendar",
+      userId: req.auth.user?.id,
     },
   });
 
-  const oauth2Client = new google.auth.OAuth2(
-    clientId,
-    clientSecret,
-    redirectUri,
+  const credential = credentials[0];
+
+  if (!!!credential?.refreshToken) {
+    return NextResponse.json({ error: "No credentials found" });
+  }
+
+  const validRefreshToken = credentials
+    .filter((item) => !!item.refreshToken)
+    .map((item) => item.refreshToken as string);
+
+  const results = await Promise.all([
+    ...validRefreshToken.map((refreshToken) => processCredential(refreshToken)),
+  ]);
+
+  // pick color for each different calendar
+  const colors = ["red", "blue", "green", "yellow", "orange", "purple", "pink"];
+
+  const filteredResults = results.filter(
+    (result) => result.data.items.length > 0,
   );
 
-  oauth2Client.setCredentials({
-    access_token: credential?.accessToken,
-    refresh_token: credential?.refreshToken,
-    scope: credential?.scope,
-    token_type: credential?.tokenType,
-    expiry_date: credential?.expiryDate,
+  const processResults = [];
+
+  filteredResults.forEach((result, index) => {
+    result.data.items.forEach((event) => {
+      const { summary, start, end } = event;
+
+      if (start?.dateTime) {
+        processResults.push({
+          title: summary,
+          start: start.dateTime,
+          end: end.dateTime,
+          time: start?.timeZone,
+          color: colors[index],
+        });
+      }
+    });
   });
 
-  console.log({ credential });
+  // FlatMap results
+  const events = processResults.flatMap((result) => result);
+
+  return NextResponse.json({ events });
+});
+
+const processCredential = async (refreshToken: string) => {
+  const authClient = new GoogleAuth();
+  // @TODO: fix as string
+  await authClient.refreshAccessToken(refreshToken);
 
   const calendar = google.calendar({
     version: "v3",
-    auth: {},
+    auth: authClient.getClientInstance(),
   });
-  console.log({ calendar });
-  const events = await calendar.events.list({
+  // this month
+  const minDate = monthStart(new Date());
+  const maxDate = monthEnd(minDate);
+  return await calendar.events.list({
     calendarId: "primary",
+    timeMin: minDate.toISOString(),
+    // One month from now
+    timeMax: maxDate.toISOString(),
   });
-  return NextResponse.json({ events });
 };

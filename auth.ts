@@ -8,6 +8,7 @@ const prisma = new PrismaClient();
 
 export const config = {
   adapter: PrismaAdapter(prisma),
+  basePath: "/auth",
   providers: [
     CredentialsProvider({
       // The name to display on the sign in form (e.g. "Sign in with...")
@@ -59,25 +60,7 @@ export const config = {
         // return '/unauthorized'
       }
     },
-    async jwt({ token, account }) {
-      console.log({ token, account });
-      // Persist the OAuth access_token to the token right after signin
-      if (token && token.email) {
-        const user = await prisma.user.findFirst({
-          where: {
-            email: token.email,
-          },
-        });
-        if (!user) {
-          return token;
-        }
-        token.userId = user?.id;
-        token.accessToken = account?.access_token;
-      }
-      return token;
-    },
     async session({ session }) {
-      console.log({ session });
       if (session?.user?.email) {
         const user = await prisma.user.findFirst({
           where: {
@@ -89,6 +72,7 @@ export const config = {
         }
         session.user.id = user?.id;
       }
+      console.log({ session });
       return session;
     },
     authorized({ request, auth }) {
@@ -97,9 +81,6 @@ export const config = {
       // if (pathname === "/middleware-example") return !!auth;
       return true;
     },
-  },
-  session: {
-    strategy: "jwt",
   },
 } satisfies NextAuthConfig;
 
