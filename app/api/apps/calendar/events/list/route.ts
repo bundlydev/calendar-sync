@@ -14,6 +14,7 @@ export const GET = auth(async (req: NextAuthRequest) => {
   // Read all credentials from DB
   const credentials = await prisma.credential.findMany({
     select: {
+      token: true,
       refreshToken: true,
     },
     where: {
@@ -53,7 +54,7 @@ export const GET = auth(async (req: NextAuthRequest) => {
         processResults.push({
           title: summary,
           start: start.dateTime,
-          end: end.dateTime,
+          end: end?.dateTime,
           time: start?.timeZone,
           color: colors[index],
         });
