@@ -218,6 +218,7 @@ export const GET = auth(async (req: NextAuthRequest) => {
       id: true,
     },
   });
+  console.log({ tokenData });
   if (!findCredential) {
     credential = await prisma.credential.create({
       data: {
