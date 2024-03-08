@@ -21,9 +21,11 @@ export function GET() {
   const authUrl = oauth2Client.generateAuthUrl({
     // 'online' (default) or 'offline' (gets refresh_token)
     access_type: "offline",
-
     // If you only need one scope you can pass it as a string
     scope: scopes,
+    // Enable incremental authorization. Recommended as a best practice.
+    include_granted_scopes: true,
+    prompt: "select_account+consent.",
   });
   return NextResponse.redirect(authUrl);
 }
