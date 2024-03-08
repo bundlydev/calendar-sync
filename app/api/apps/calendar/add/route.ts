@@ -25,7 +25,7 @@ export function GET() {
     scope: scopes,
     // Enable incremental authorization. Recommended as a best practice.
     include_granted_scopes: true,
-    prompt: "select_account+consent.",
+    prompt: "select_account+consent",
   });
   return NextResponse.redirect(authUrl);
 }
