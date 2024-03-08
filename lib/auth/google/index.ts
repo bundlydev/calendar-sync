@@ -35,7 +35,7 @@ class GoogleAuth {
     return this.clientInstance.generateAuthUrl({
       access_type: "offline",
       scope,
-      prompt: "select_account+consent",
+      prompt: "consent",
       include_granted_scopes: true,
     });
   }
