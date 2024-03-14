@@ -1,16 +1,30 @@
-import type { NextApiRequest, NextApiResponse } from "next";
+import { NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
 import { auth } from "auth";
+import type { NextAuthRequest } from "next-auth/lib";
 
-export const GET = async (req: NextApiRequest, res: NextApiResponse) => {
-  const session = await auth(req, res);
-
-  if (session) {
-    // Signed in
-    console.log("Session", JSON.stringify(session, null, 2));
-    return res.json("This is protected content.");
-  } else {
-    // Not Signed in
-    res.status(401);
+export const GET = auth(async (req: NextAuthRequest) => {
+  if (req.auth && !req.auth.user?.id) {
+    return Response.json({ data: "Protected data", auth: req.auth });
   }
-  res.end();
-};
+
+  const list = await prisma.credential.findMany({
+    where: {
+      userId: req.auth?.user?.id,
+    },
+    select: {
+      id: true,
+      calendars: {
+        select: {
+          id: true,
+          name: true,
+        },
+        where: {
+          primary: true,
+        },
+      },
+    },
+  });
+
+  return NextResponse.json(list);
+});

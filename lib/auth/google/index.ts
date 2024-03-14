@@ -11,12 +11,10 @@ import { google } from "googleapis";
 
 export type OAuth2Client = typeof google.auth.OAuth2.prototype;
 class GoogleAuth {
-  private clientInstance: OAuth2Client;
-  constructor() {
-    this.clientInstance = this.init();
-  }
+  private static clientInstance: OAuth2Client;
+  private constructor() {}
 
-  private init() {
+  private static init() {
     const client = new google.auth.OAuth2({
       clientId: env.AUTH_GOOGLE_ID,
       clientSecret: env.AUTH_GOOGLE_SECRET,
@@ -26,40 +24,72 @@ class GoogleAuth {
     return client;
   }
 
-  getClientInstance() {
-    if (!this.clientInstance) this.clientInstance = this.init();
-    return this.clientInstance;
+  public static getClientInstance() {
+    if (!GoogleAuth.clientInstance) {
+      GoogleAuth.clientInstance = GoogleAuth.init();
+    }
+    return GoogleAuth.clientInstance;
   }
 
-  public getAuthUrl(scope: string[]): string {
-    return this.clientInstance.generateAuthUrl({
-      access_type: "offline",
-      scope,
-      prompt: "consent",
-      include_granted_scopes: true,
+  public static userAuthorize(accessToken: string) {
+    return GoogleAuth.getClientInstance().setCredentials({
+      access_token: accessToken,
     });
   }
 
-  public async getToken(code: string) {
-    const { tokens } = await this.clientInstance.getToken(code);
+  public static getAuthUrl(scope: string[]): string {
+    return this.getClientInstance().generateAuthUrl({
+      access_type: "offline",
+      scope,
+      include_granted_scopes: true,
+      // Consent should be here otherwise google will not return refresh token
+      prompt: "consent",
+    });
+  }
+
+  public static async getToken(code: string) {
+    const { tokens } = await this.getClientInstance().getToken(code);
     return tokens;
   }
 
-  public async refreshAccessToken(refreshToken: string) {
-    this.clientInstance.setCredentials({ refresh_token: refreshToken });
-    const accessTokenResponse = await this.clientInstance.refreshAccessToken();
-    if (!accessTokenResponse.credentials) {
-      throw new Error("Failed to refresh access token.");
+  public static async refreshAccessToken(
+    accessToken: string,
+    refreshToken: string,
+    expiresAt: Date,
+  ) {
+    if (new Date() < expiresAt) {
+      GoogleAuth.getClientInstance().setCredentials({
+        access_token: accessToken,
+      });
+      return;
     }
-    await this.saveNewRefreshToken({
-      oldRefreshToken: refreshToken,
-      credentials: accessTokenResponse.credentials,
-    });
 
-    this.clientInstance.setCredentials(accessTokenResponse.credentials);
+    GoogleAuth.getClientInstance().setCredentials({
+      refresh_token: refreshToken,
+    });
+    try {
+      const accessTokenResponse =
+        await GoogleAuth.getClientInstance().refreshAccessToken();
+
+      if (!accessTokenResponse.credentials) {
+        throw new Error("Failed to refresh access token.");
+      }
+      await this.saveNewRefreshToken({
+        oldRefreshToken: refreshToken,
+        credentials: accessTokenResponse.credentials,
+      });
+
+      GoogleAuth.getClientInstance().setCredentials({
+        access_token: accessTokenResponse.credentials.access_token,
+        expiry_date: accessTokenResponse.credentials.expiry_date,
+      });
+    } catch (error) {
+      console.error("Error refreshing access token", error);
+      throw new Error("Error refreshing access token");
+    }
   }
 
-  private async saveNewRefreshToken({
+  private static async saveNewRefreshToken({
     oldRefreshToken,
     credentials,
   }: {
@@ -78,10 +108,15 @@ class GoogleAuth {
     if (!currentCredential) {
       throw new Error("No credential found");
     }
-
+    console.log(
+      "Updating refresh token",
+      { credentials },
+      currentCredential.id,
+    );
     await prisma.credential.update({
       where: { id: currentCredential.id },
       data: {
+        token: credentials.access_token,
         refreshToken: refresh_token,
         expiresAt: expiry_date ? new Date(expiry_date) : null,
       },

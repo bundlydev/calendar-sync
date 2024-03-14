@@ -25,6 +25,7 @@ export function GET() {
     scope: scopes,
     // Enable incremental authorization. Recommended as a best practice.
     include_granted_scopes: true,
+    // Consent should be here otherwise google will not return refresh token
     prompt: "consent",
   });
   return NextResponse.redirect(authUrl);

@@ -105,7 +105,7 @@ export const GET = auth(async (req: NextAuthRequest) => {
 
   if (reqQuery.success === false) {
     return NextResponse.redirect(
-      `${calendsyncWebsiteURL}/synchronize?error=access_denied`,
+      `${calendsyncWebsiteURL}/home?error=access_denied`,
     );
   }
 
@@ -124,7 +124,7 @@ export const GET = auth(async (req: NextAuthRequest) => {
   for (const scope of scopes) {
     if (!tokenScope?.includes(scope)) {
       return NextResponse.redirect(
-        `${calendsyncWebsiteURL}/synchronize?error=access_denied`,
+        `${calendsyncWebsiteURL}/home?error=access_denied`,
       );
     }
   }
@@ -142,7 +142,7 @@ export const GET = auth(async (req: NextAuthRequest) => {
   // print paths of error
   if (calendarList.success === false) {
     return NextResponse.redirect(
-      `${calendsyncWebsiteURL}/synchronize?error=calendar_list_failed`,
+      `${calendsyncWebsiteURL}/home?error=calendar_list_failed`,
     );
   }
 
@@ -169,7 +169,7 @@ export const GET = auth(async (req: NextAuthRequest) => {
   }
   if (!user?.id) {
     return NextResponse.redirect(
-      `${calendsyncWebsiteURL}/synchronize?error=user_not_found`,
+      `${calendsyncWebsiteURL}/home?error=user_not_found`,
     );
   }
 
@@ -186,7 +186,7 @@ export const GET = auth(async (req: NextAuthRequest) => {
 
   if (!provider) {
     return NextResponse.redirect(
-      `${calendsyncWebsiteURL}/synchronize?error=provider_not_found`,
+      `${calendsyncWebsiteURL}/home?error=provider_not_found`,
     );
   }
 
@@ -197,7 +197,7 @@ export const GET = auth(async (req: NextAuthRequest) => {
 
   if (!provider) {
     return NextResponse.redirect(
-      `${calendsyncWebsiteURL}/synchronize?error=provider_not_found`,
+      `${calendsyncWebsiteURL}/home?error=provider_not_found`,
     );
   }
 
@@ -218,7 +218,7 @@ export const GET = auth(async (req: NextAuthRequest) => {
       id: true,
     },
   });
-  console.log({ tokenData });
+
   if (!findCredential) {
     credential = await prisma.credential.create({
       data: {
@@ -260,9 +260,7 @@ export const GET = auth(async (req: NextAuthRequest) => {
     }),
   });
 
-  return NextResponse.redirect(
-    `${calendsyncWebsiteURL}/synchronize?success=true`,
-  );
+  return NextResponse.redirect(`${calendsyncWebsiteURL}/home?success=true`);
 });
 
 // calendarList {

@@ -16,13 +16,22 @@ const config = {
    *
    * @see https://github.com/vercel/next.js/issues/41980
    */
-  i18n: {
-    locales: ["en"],
-    defaultLocale: "en",
-  },
+  // i18n: {
+  //   locales: ["en"],
+  //   defaultLocale: "en",
+  // },
 
   // We run these separately in CI, so we can skip them here.
   eslint: { ignoreDuringBuilds: true },
   typescript: { ignoreBuildErrors: true },
+
+  // Remote images host
+  images: {
+    domains: [
+      "lh3.googleusercontent.com",
+      "placehold.it",
+      "images.unsplash.com",
+    ],
+  },
 };
 export default config;

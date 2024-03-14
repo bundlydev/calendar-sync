@@ -7,7 +7,7 @@ import { google } from "googleapis";
 import type { NextAuthRequest } from "next-auth/lib";
 
 export const GET = auth(async (req: NextAuthRequest) => {
-  if (!req.auth || !req.auth.user.id) {
+  if (!req.auth || !req?.auth?.user?.id) {
     return NextResponse.json({ message: "Not authenticated" }, { status: 401 });
   }
 
@@ -16,6 +16,7 @@ export const GET = auth(async (req: NextAuthRequest) => {
     select: {
       token: true,
       refreshToken: true,
+      expiresAt: true,
     },
     where: {
       type: "calendar",
@@ -29,12 +30,16 @@ export const GET = auth(async (req: NextAuthRequest) => {
     return NextResponse.json({ error: "No credentials found" });
   }
 
-  const validRefreshToken = credentials
-    .filter((item) => !!item.refreshToken)
-    .map((item) => item.refreshToken as string);
+  const validCredentials = credentials.filter((item) => !!item.refreshToken);
 
   const results = await Promise.all([
-    ...validRefreshToken.map((refreshToken) => processCredential(refreshToken)),
+    ...validCredentials.map((credential) =>
+      processCredential(
+        credential.token,
+        credential.refreshToken,
+        credential.expiresAt,
+      ),
+    ),
   ]);
 
   // pick color for each different calendar
@@ -68,10 +73,14 @@ export const GET = auth(async (req: NextAuthRequest) => {
   return NextResponse.json({ events });
 });
 
-const processCredential = async (refreshToken: string) => {
+const processCredential = async (
+  accessToken: string,
+  refreshToken: string,
+  expiresAt: Date,
+) => {
   const authClient = new GoogleAuth();
   // @TODO: fix as string
-  await authClient.refreshAccessToken(refreshToken);
+  await authClient.refreshAccessToken(accessToken, refreshToken, expiresAt);
 
   const calendar = google.calendar({
     version: "v3",

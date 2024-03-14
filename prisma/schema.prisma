@@ -76,6 +76,7 @@ model Credential {
 
     sourceCredentials CalendarSyncTask[] @relation(name: "sourceCredential")
     toCredentials CalendarSyncTask[]     @relation(name: "toCredential")
+    eventsSynced EventSynced[]           @relation(name: "eventsSynced")
 
     @@unique([userId, type, providerId, externalId])
 }
@@ -133,4 +134,12 @@ model CalendarSyncTask {
   allDayEventConfig  AllDayEventConfigEnum
   enabled            Boolean                     @default(true)
   @@unique([sourceCredentialId, toCredentialId])
+}
+
+model EventSynced {
+  id           String       @id @default(cuid())
+  eventUid     String
+  eventId      String
+  credentialId String
+  credential   Credential?  @relation(name: "eventsSynced", fields: [credentialId], references: [id], onDelete: NoAction)
 }
