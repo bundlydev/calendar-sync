@@ -62,6 +62,7 @@ export const fixTimeForAllDayEvent = (
       timeZone: "UTC",
     };
   }
+
   return {
     dateTime: time?.dateTime ? time?.dateTime : "",
     timeZone: time?.timeZone ? time?.timeZone : "UTC",

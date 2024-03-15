@@ -55,7 +55,7 @@ export const syncEvents = async (
       new Date().getTime() + daysToSync * 24 * 60 * 60 * 1000,
     ).toISOString(),
     // @NOTE: maxResults can be up to 2500
-    maxResults: 2,
+    maxResults: 6,
   });
 
   // Now we have the events, we can write them to the destination calendar
@@ -135,14 +135,8 @@ export const syncEvents = async (
       originEvent: {
         id: event.id,
         iCalUID: event.iCalUID,
-        start: {
-          dateTime: event.start?.dateTime,
-          timeZone: event.start?.timeZone,
-        },
-        end: {
-          dateTime: event.end?.dateTime,
-          timeZone: event.end?.timeZone,
-        },
+        start: event.start,
+        end: event.end,
         raw: JSON.stringify(event),
       },
     });
@@ -154,6 +148,7 @@ export const syncEvents = async (
   const webhookResult = await watchers.createWatch({
     calendarId: "primary",
     credentialId: calendarSyncTask.sourceCredentialId,
+    calendarSyncTaskId: calendarSyncTask.id,
   });
 
   return {

@@ -15,7 +15,7 @@ const server = z.object({
   AUTH_GOOGLE_SECRET: z.string().optional(),
   CALENDAR_SYNC_WEB_URL: z.string().optional(),
   GOOGLE_NOTIFICATIONS_ENABLED: z.string().optional(),
-  GOOGLE_NOTIFICATIONS_EXPIRATION_MINUTES: z.string().optional(),
+  GOOGLE_NOTIFICATIONS_EXPIRATION_MINUTES: z.coerce.number().optional(),
 });
 
 /**

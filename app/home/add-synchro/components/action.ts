@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { auth } from "@/auth";
 import GoogleAuth from "@/lib/auth/google";
+import { syncEvents } from "@/lib/events/google/sync";
 import GoogleNotification from "@/lib/notifications/google";
 import { prisma } from "@/lib/prisma";
 import {
@@ -93,9 +94,14 @@ export async function createSyncTask(rawData: FormData) {
       credentials.expiresAt,
     );
 
+    // First sync
+    await syncEvents(createdTask.id, session.user.id);
+
+    // Then we create the watch so we don't receive a lot of notifications
     await new GoogleNotification().createWatch({
       calendarId: "primary", // @TODO: should use calendarId and not just default,
       credentialId: credentials.id,
+      calendarSyncTaskId: createdTask.id,
     });
   } else {
     return {

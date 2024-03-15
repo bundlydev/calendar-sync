@@ -1,10 +1,13 @@
 import GoogleAuth, { type OAuth2Client } from "@/lib/auth/google";
 import { prisma } from "@/lib/prisma";
+import { env } from "@/src/env.mjs";
+import { addMinute } from "@formkit/tempo";
 import { google } from "googleapis";
 
 interface ICreateWatch {
   calendarId: string;
   credentialId: string;
+  calendarSyncTaskId: string;
 }
 
 class GoogleNotification {
@@ -15,7 +18,16 @@ class GoogleNotification {
   }
 
   public async createWatch(props: ICreateWatch) {
-    const { calendarId, credentialId } = props;
+    if (env.GOOGLE_NOTIFICATIONS_ENABLED !== "true") {
+      return true;
+    }
+    const expirationOffsetUnixDate = addMinute(
+      new Date(),
+      Number(env.GOOGLE_NOTIFICATIONS_EXPIRATION_MINUTES || 60),
+    )
+      .getTime()
+      .toString();
+    const { calendarId, credentialId, calendarSyncTaskId } = props;
     const calendarApi = google.calendar({
       version: "v3",
       auth: this.auth,
@@ -37,11 +49,14 @@ class GoogleNotification {
 
     // Create a new notification
 
+    // @TODO: prisma transaction
+
     const createNotification = await prisma.notification.create({
       data: {
         type: "web_hook",
         address: `https://7d37-200-76-22-226.ngrok-free.app/api/notifications/webhook/google`,
         credentialId,
+        calendarSyncTaskId,
       },
     });
 
@@ -56,13 +71,14 @@ class GoogleNotification {
     if (!notification) {
       throw new Error("Failed to find a notification");
     }
-
+    console.log(expirationOffsetUnixDate);
     const res = await calendarApi.events.watch({
       calendarId: calendarId || "primary",
       requestBody: {
         id: notification.watchUuid,
         type: "web_hook",
         address: notification.address,
+        expiration: expirationOffsetUnixDate,
       },
     });
 
@@ -86,6 +102,26 @@ class GoogleNotification {
     });
 
     // First we stop then we try to delete the notification
+
+    const credential = await prisma.credential.findFirst({
+      where: {
+        id: "clts8b6by000di1z4ih25bv9w",
+      },
+    });
+    if (
+      !credential ||
+      !credential.token ||
+      !credential.refreshToken ||
+      !credential.expiresAt
+    ) {
+      throw new Error("Credential not found");
+    }
+
+    await GoogleAuth.refreshAccessToken(
+      credential.token,
+      credential.refreshToken,
+      credential.expiresAt,
+    );
 
     const res = await calendarApi.channels.stop({
       requestBody: {
