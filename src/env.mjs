@@ -11,19 +11,11 @@ const server = z.object({
     process.env.NODE_ENV === "production"
       ? z.string().min(1)
       : z.string().min(1).optional(),
-  // NEXTAUTH_URL: z.preprocess(
-  //   // This makes Vercel deployments not fail if you don't set NEXTAUTH_URL
-  //   // Since NextAuth.js automatically uses the VERCEL_URL if present.
-  //   (str) => process.env.VERCEL_URL ?? str,
-  //   // VERCEL_URL doesn't include `https` so it cant be validated as a URL
-  //   process.env.VERCEL ? z.string().min(1) : z.string().url(),
-  // ),
-  // // Add `.min(1) on ID and SECRET if you want to make sure they're not empty
-  // DISCORD_CLIENT_ID: z.string().optional(),
-  // DISCORD_CLIENT_SECRET: z.string().optional(),
   AUTH_GOOGLE_ID: z.string().optional(),
   AUTH_GOOGLE_SECRET: z.string().optional(),
   CALENDAR_SYNC_WEB_URL: z.string().optional(),
+  GOOGLE_NOTIFICATIONS_ENABLED: z.string().optional(),
+  GOOGLE_NOTIFICATIONS_EXPIRATION_MINUTES: z.string().optional(),
 });
 
 /**
@@ -32,7 +24,7 @@ const server = z.object({
  * To expose them to the client, prefix them with `NEXT_PUBLIC_`.
  */
 const client = z.object({
-  // NEXT_PUBLIC_CLIENTVAR: z.string().min(1),
+  NEXT_PUBLIC_CALENDAR_SYNC_WEB_URL: z.string().optional(),
 });
 
 /**
@@ -44,13 +36,13 @@ const processEnv = {
   DATABASE_URL: process.env.DATABASE_URL,
   NODE_ENV: process.env.NODE_ENV,
   AUTH_SECRET: process.env.AUTH_SECRET,
-  // NEXTAUTH_URL: process.env.NEXTAUTH_URL,
-  // DISCORD_CLIENT_ID: process.env.DISCORD_CLIENT_ID,
-  // DISCORD_CLIENT_SECRET: process.env.DISCORD_CLIENT_SECRET,
-  // // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
   AUTH_GOOGLE_ID: process.env.AUTH_GOOGLE_ID,
   AUTH_GOOGLE_SECRET: process.env.AUTH_GOOGLE_SECRET,
   CALENDAR_SYNC_WEB_URL: process.env.CALENDAR_SYNC_WEB_URL,
+  GOOGLE_NOTIFICATIONS_ENABLED: process.env.GOOGLE_NOTIFICATIONS_ENABLED,
+  GOOGLE_NOTIFICATIONS_EXPIRATION_MINUTES:
+    process.env.GOOGLE_NOTIFICATIONS_EXPIRATION_MINUTES,
+  NEXT_PUBLIC_CALENDAR_SYNC_WEB_URL: process.env.CALENDAR_SYNC_WEB_URL,
 };
 
 // Don't touch the part below

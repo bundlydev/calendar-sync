@@ -77,6 +77,7 @@ model Credential {
     sourceCredentials CalendarSyncTask[] @relation(name: "sourceCredential")
     toCredentials CalendarSyncTask[]     @relation(name: "toCredential")
     eventsSynced EventSynced[]           @relation(name: "eventsSynced")
+    notifications Notification[]         @relation(name: "notifications")
 
     @@unique([userId, type, providerId, externalId])
 }
@@ -133,13 +134,44 @@ model CalendarSyncTask {
   privacy            PrivacyCalendarSyncTaskEnum
   allDayEventConfig  AllDayEventConfigEnum
   enabled            Boolean                     @default(true)
+  notifications      Notification[]              @relation(name: "notifications")
+
+
   @@unique([sourceCredentialId, toCredentialId])
 }
 
 model EventSynced {
-  id           String       @id @default(cuid())
-  eventUid     String
-  eventId      String
-  credentialId String
-  credential   Credential?  @relation(name: "eventsSynced", fields: [credentialId], references: [id], onDelete: NoAction)
+  id                    String       @id @default(cuid())
+  eventUid              String
+  eventId               String
+  credentialId          String
+  credential            Credential?  @relation(name: "eventsSynced", fields: [credentialId], references: [id], onDelete: NoAction)
+  originEventUid        String
+  originEventId         String
+  originStart           DateTime
+  originStartTimezone   String
+  originEnd             DateTime
+  originEndTimezone     String
+  originRaw             Json?
+
+  @@index([eventId])
+  @@index([credentialId])
+  @@index([originEventId])
+}
+
+model Notification {
+  id                  String     @id @default(cuid())
+  watchUuid           String     @default(cuid())
+  type                String
+  address             String
+  resourceId          String?
+  token               String?
+  expiration          DateTime?
+  calendarSyncTaskId  String
+  calendarSyncTask    CalendarSyncTask @relation(name: "notifications", fields: [calendarSyncTaskId], references: [id], onDelete: Cascade)
+  credentialId        String     
+  credential          Credential @relation(name: "notifications", fields: [credentialId], references: [id], onDelete: NoAction)
+
+  @@index([credentialId, expiration])
+  @@index([watchUuid, expiration])
 }

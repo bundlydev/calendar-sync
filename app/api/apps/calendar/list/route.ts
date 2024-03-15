@@ -26,5 +26,9 @@ export const GET = auth(async (req: NextAuthRequest) => {
     },
   });
 
+  if (!list) {
+    return NextResponse.json({ message: "No credentials found", status: 404 });
+  }
+
   return NextResponse.json(list);
 });

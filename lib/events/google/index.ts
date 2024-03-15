@@ -1,12 +1,19 @@
 import GoogleAuth, { type OAuth2Client } from "@/lib/auth/google";
 import EventsService from "@/lib/services/db/events";
 // import EventsService from "@/lib/services/db/events";
-import { google } from "googleapis";
+
+import { google, type calendar_v3 } from "googleapis";
 
 interface IGoogleEventsProps {
   maxResults: number;
   timeMin: string;
   timeMax: string;
+}
+
+interface ICreateEvents extends calendar_v3.Schema$Event {
+  credentialId: string;
+  colorId: string;
+  originEvent: calendar_v3.Schema$Event & { raw: string };
 }
 
 class GoogleEvents {
@@ -44,36 +51,11 @@ class GoogleEvents {
     start,
     end,
     source,
-    colorId,
+    // colorId,
     credentialId,
     reminders,
-  }: {
-    summary: string;
-    location: string;
-    description: string;
-    start: {
-      dateTime: string;
-      timeZone: string;
-    };
-    end: {
-      dateTime: string;
-      timeZone: string;
-    };
-    attendees?: string[] | never[];
-    reminders?: {
-      useDefault: boolean;
-      overrides: {
-        method: string;
-        minutes: number;
-      }[];
-    };
-    source: {
-      title: string;
-      url: string;
-    };
-    colorId: string;
-    credentialId: string;
-  }) {
+    originEvent,
+  }: ICreateEvents) {
     const calendar = google.calendar({
       version: "v3",
       auth: this.auth,
@@ -85,22 +67,37 @@ class GoogleEvents {
       start,
       end,
       source,
+      reminders,
+      // @TODO: handle colorId, recurrence, attendees
       // colorId,
       // recurrence: ["RRULE:FREQ=DAILY;COUNT=2"],
       // attendees: [],
-      reminders,
     };
     const res = await calendar.events.insert({
       calendarId: "primary",
       requestBody: event,
     });
+
     console.log({ data: res.data });
     console.log("Event created: %s", res.data.htmlLink);
+
+    // TS safe
+    if (!res.data.iCalUID || !res.data.id) {
+      return;
+    }
+
     // save the event id to the database
     await new EventsService().saveEvent({
-      eventUid: res.data.iCalUID,
+      id: res.data.iCalUID,
       eventId: res.data.id,
       credentialId,
+      originEvent: {
+        id: originEvent.id,
+        iCalUID: originEvent.iCalUID,
+        start: originEvent.start,
+        end: originEvent.end,
+        raw: JSON.stringify(originEvent),
+      },
     });
     return res;
   }

@@ -37,13 +37,17 @@ class GoogleAuth {
     });
   }
 
-  public static getAuthUrl(scope: string[]): string {
+  public static getAuthUrl(scope: string[], redirectUri?: string): string {
     return this.getClientInstance().generateAuthUrl({
+      //   // 'online' (default) or 'offline' (gets refresh_token)
       access_type: "offline",
+      //   // If you only need one scope you can pass it as a string
       scope,
+      //   // Enable incremental authorization. Recommended as a best practice.
       include_granted_scopes: true,
-      // Consent should be here otherwise google will not return refresh token
+      //   // Consent should be here otherwise google will not return refresh token
       prompt: "consent",
+      ...(redirectUri ? { redirect_uri: redirectUri } : {}),
     });
   }
 
