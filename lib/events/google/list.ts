@@ -4,6 +4,14 @@ import { fixTimeForAllDayEvent } from "@/lib/services/db/events";
 import { monthEnd, monthStart } from "@formkit/tempo";
 import { google, type calendar_v3 } from "googleapis";
 
+export interface IEvent {
+  title: calendar_v3.Schema$Event["summary"];
+  start: string;
+  end: string;
+  time: string;
+  color: string;
+}
+
 export const list = async (userId?: string) => {
   // Read all credentials from DB
   const credentials = await prisma.credential.findMany({
@@ -21,7 +29,11 @@ export const list = async (userId?: string) => {
   const credential = credentials[0];
 
   if (!credential?.refreshToken) {
-    return { status: 400, message: "No credentials found" };
+    return {
+      status: 400,
+      message: "No credentials found",
+      events: [] as IEvent[],
+    };
   }
 
   const validCredentials = credentials.filter((item) => !!item.refreshToken);
@@ -52,13 +64,7 @@ export const list = async (userId?: string) => {
     (item) => item?.data?.items && item.data.items.length > 0,
   );
 
-  const processResults: {
-    title: calendar_v3.Schema$Event["summary"];
-    start: string;
-    end: string;
-    time: string;
-    color: string;
-  }[] = [];
+  const processResults: IEvent[] = [];
 
   filteredResults.forEach((result, index) => {
     result?.data.items?.length &&
@@ -84,6 +90,7 @@ export const list = async (userId?: string) => {
   return {
     status: 200,
     events,
+    message: "",
   };
 };
 

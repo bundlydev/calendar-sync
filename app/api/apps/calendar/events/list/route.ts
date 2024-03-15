@@ -11,11 +11,16 @@ export const GET = auth(async (req: NextAuthRequest) => {
   const result = await list(req.auth.user.id);
 
   if (result.status !== 200) {
-    return NextResponse.json(
-      { message: result.message },
-      { status: result.status },
-    );
+    return NextResponse.json({
+      message: result.message,
+      status: result.status,
+      events: [],
+    });
   }
 
-  return NextResponse.json({ events: result.events }, { status: 200 });
+  return NextResponse.json({
+    events: result.events,
+    status: result.status,
+    message: result.message,
+  });
 });

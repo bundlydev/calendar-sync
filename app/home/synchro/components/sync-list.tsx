@@ -22,7 +22,7 @@ const SyncList = () => {
       }
       setSyncList(parsed.data);
     };
-    fetchSyncs();
+    void fetchSyncs();
   }, []);
 
   return (

@@ -2,6 +2,8 @@
 
 import { revalidatePath } from "next/cache";
 import { auth } from "@/auth";
+import GoogleAuth from "@/lib/auth/google";
+import GoogleNotification from "@/lib/notifications/google";
 import { prisma } from "@/lib/prisma";
 import {
   AllDayEventConfigEnum,
@@ -23,6 +25,8 @@ export async function createSyncTask(rawData: FormData) {
   // Convert FormData to JSON
   const formData = {};
   for (const [key, value] of rawData.entries()) {
+    // @TODO: fix ts error
+    // @ts-expect-error todo
     formData[key] = value;
   }
 
@@ -45,18 +49,13 @@ export async function createSyncTask(rawData: FormData) {
   const data = syncTask.data;
   // Add the logic to create a sync task here
 
-  await prisma.calendarSyncTask.create({
+  // @TODO: move to a service
+  const createdTask = await prisma.calendarSyncTask.create({
     data: {
       userId: session?.user?.id,
       sourceCredentialId: data.sourceCredentialId,
-      // sourceCredential: {
-      //   connect: { id: data.sourceCredentialId },
-      // },
       sourceExternalId: data.sourceExternalId || "",
       toCredentialId: data.toCredentialId,
-      // toCredential: {
-      //   connect: { id: data.toCredentialId },
-      // },
       toExternalId: data.toExternalId || "",
       color: data.color,
       privacy: data.privacy,
@@ -64,6 +63,46 @@ export async function createSyncTask(rawData: FormData) {
       enabled: true,
     },
   });
+
+  if (createdTask) {
+    // Get user credentials
+    const credentials = await prisma.credential.findFirst({
+      where: {
+        type: "calendar",
+        userId: session?.user?.id,
+      },
+    });
+
+    // Ts safe
+    if (
+      !credentials ||
+      !credentials.token ||
+      !credentials.refreshToken ||
+      !credentials.expiresAt
+    ) {
+      return {
+        status: "error",
+        message: "No credentials found",
+      };
+    }
+
+    // We need to create a notification
+    await GoogleAuth.refreshAccessToken(
+      credentials.token,
+      credentials.refreshToken,
+      credentials.expiresAt,
+    );
+
+    await new GoogleNotification().createWatch({
+      calendarId: "primary", // @TODO: should use calendarId and not just default,
+      credentialId: credentials.id,
+    });
+  } else {
+    return {
+      status: "error",
+      message: "Error creating sync task",
+    };
+  }
 
   // Validate against zod schema
   revalidatePath("/home/add-synchro");
