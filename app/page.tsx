@@ -14,7 +14,7 @@ export default async function Page() {
   const session = await auth();
   return (
     <div className="container mx-auto md:max-w-7xl">
-      <header className="flex w-full flex-wrap bg-white px-2 py-4 text-sm dark:bg-transparent sm:flex-nowrap sm:justify-start lg:px-0">
+      <header className="flex w-full flex-wrap bg-white px-2 py-4 text-sm dark:bg-transparent sm:flex-nowrap sm:justify-start">
         <nav
           className="mx-auto flex w-full basis-full flex-wrap items-center justify-between"
           aria-label="Global"
@@ -108,7 +108,7 @@ export default async function Page() {
           </div>
         </nav>
       </header>
-      <section className="mt-8 flex flex-col px-4 lg:px-0">
+      <section className="mt-8 flex flex-col px-4">
         {/* 2 sections half and half*/}
         <div className="flex flex-row justify-between">
           <div className="flex flex-1 flex-col items-start justify-center">
@@ -121,7 +121,7 @@ export default async function Page() {
             </p>
 
             <div className="mt-8 flex flex-col space-y-4 self-start md:flex-row md:items-center md:justify-center md:space-y-0">
-              <p className="mr-6 text-base font-bold dark:text-gray-200">
+              <p className="mr-2 text-base font-bold dark:text-gray-200 lg:mr-6">
                 COMPATIBLE WITH:
               </p>
               {/* GCALENDAR LOGO with text */}
@@ -132,7 +132,7 @@ export default async function Page() {
                   width={24}
                   height={24}
                 />
-                <p className="mx-4 text-base font-semibold dark:text-gray-200">
+                <p className="mx-2 text-base font-semibold dark:text-gray-200 lg:mx-4">
                   Gmail
                 </p>
               </div>
@@ -145,7 +145,7 @@ export default async function Page() {
                   height={24}
                   className="dark:invert"
                 />
-                <p className="mx-4 text-base font-semibold dark:text-gray-200">
+                <p className="mx-2 text-base font-semibold dark:text-gray-200 lg:mx-4">
                   Notion
                 </p>
               </div>
@@ -158,7 +158,7 @@ export default async function Page() {
                   height={24}
                   className="dark:invert"
                 />
-                <p className="mx-4 text-base font-semibold dark:text-gray-200">
+                <p className="mx-2 text-base font-semibold dark:text-gray-200 lg:mx-4">
                   Apple
                 </p>
               </div>
@@ -191,7 +191,7 @@ export default async function Page() {
           </div>
         </div>
       </section>
-      <section className="mt-12 hidden flex-col items-center px-4 md:flex lg:px-0">
+      <section className="mt-12 hidden flex-col items-center px-4 md:flex">
         <div className="mt-8 flex flex-row justify-around">
           <div className="mr-2 flex flex-1 flex-row items-center justify-center">
             <LucideSwords size={32} className="mr-4 self-start dark:invert" />
