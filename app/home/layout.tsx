@@ -11,7 +11,7 @@ export default function Layout({
     <section className="flex">
       <section className="flex w-64 flex-col">
         {/* <!-- Navigation Toggle --> */}
-        <button
+        {/* <button
           type="button"
           className="text-gray-500 hover:text-gray-600"
           data-hs-overlay="#docs-sidebar"
@@ -31,12 +31,12 @@ export default function Layout({
               d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"
             />
           </svg>
-        </button>
+        </button> */}
         {/* <!-- End Navigation Toggle --> */}
 
         <div
           id="docs-sidebar"
-          className="hs-overlay fixed bottom-0 start-0 top-0 z-[60] hidden w-64 -translate-x-full transform overflow-y-auto border-e border-gray-200 bg-white pb-10 pt-7 transition-all duration-300 hs-overlay-open:translate-x-0 dark:border-gray-700 dark:bg-gray-800 lg:bottom-0 lg:end-auto lg:block lg:translate-x-0 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-300 dark:[&::-webkit-scrollbar-thumb]:bg-slate-500 [&::-webkit-scrollbar-track]:bg-gray-100 dark:[&::-webkit-scrollbar-track]:bg-slate-700 [&::-webkit-scrollbar]:w-2"
+          className="hs-overlay fixed bottom-0 start-0 top-0 z-[60] hidden w-64 -translate-x-full transform overflow-y-auto border-e border-gray-200 bg-white pb-10 pt-7 transition-all duration-300 hs-overlay-open:translate-x-0 dark:border-gray-700 dark:bg-transparent lg:bottom-0 lg:end-auto lg:block lg:translate-x-0 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-300 dark:[&::-webkit-scrollbar-thumb]:bg-slate-500 [&::-webkit-scrollbar-track]:bg-gray-100 dark:[&::-webkit-scrollbar-track]:bg-slate-700 [&::-webkit-scrollbar]:w-2"
         >
           <div className="px-6">
             <a
@@ -49,7 +49,7 @@ export default function Layout({
                 alt="Logo"
                 width={180}
                 height={70}
-                className="h-auto w-auto"
+                className="dark:brightness-100 dark:contrast-100 dark:grayscale dark:invert dark:filter"
                 priority
               />
             </a>
@@ -63,7 +63,7 @@ export default function Layout({
                 <Link href="/home/synchro">
                   <button
                     type="button"
-                    className="hs-accordion-toggle flex w-full items-center gap-x-3.5 rounded-lg px-2.5 py-2 text-start text-sm text-slate-700 hover:bg-gray-100 hs-accordion-active:text-blue-600 hs-accordion-active:hover:bg-transparent dark:bg-gray-800 dark:text-slate-400 dark:hover:bg-gray-900 dark:hover:text-slate-300 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600 dark:hs-accordion-active:text-white"
+                    className="hs-accordion-toggle dark:bg-transparenttext-gray-500 flex w-full items-center gap-x-3.5 rounded-lg px-2.5 py-2 text-start text-sm text-slate-700 hover:bg-gray-100 hover:text-gray-600 hs-accordion-active:text-blue-600 hs-accordion-active:hover:bg-transparent dark:text-slate-400 dark:hover:bg-gray-900 dark:hover:text-slate-300 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600 dark:hs-accordion-active:text-white"
                   >
                     <Home width={24} height={24} />
                     Home
@@ -110,7 +110,7 @@ export default function Layout({
                       <Link href="/home/synchro">
                         <button
                           type="button"
-                          className="hs-accordion-toggle flex w-full items-center gap-x-3.5 rounded-lg px-2.5 py-2 text-start text-sm text-slate-700 hover:bg-gray-100 hs-accordion-active:text-blue-600 hs-accordion-active:hover:bg-transparent dark:bg-gray-800 dark:text-slate-400 dark:hover:bg-gray-900 dark:hover:text-slate-300 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600 dark:hs-accordion-active:text-white"
+                          className="hs-accordion-toggle dark:bg-transparenttext-gray-500 flex w-full items-center gap-x-3.5 rounded-lg px-2.5 py-2 text-start text-sm text-slate-700 hover:bg-gray-100 hover:text-gray-600 hs-accordion-active:text-blue-600 hs-accordion-active:hover:bg-transparent dark:text-slate-400 dark:hover:bg-gray-900 dark:hover:text-slate-300 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600 dark:hs-accordion-active:text-white"
                         >
                           Synchro
                         </button>
@@ -120,7 +120,7 @@ export default function Layout({
                       <Link href="/home/xyz">
                         <button
                           type="button"
-                          className="hs-accordion-toggle flex w-full items-center gap-x-3.5 rounded-lg px-2.5 py-2 text-start text-sm text-slate-700 hover:bg-gray-100 hs-accordion-active:text-blue-600 hs-accordion-active:hover:bg-transparent dark:bg-gray-800 dark:text-slate-400 dark:hover:bg-gray-900 dark:hover:text-slate-300 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600 dark:hs-accordion-active:text-white"
+                          className="hs-accordion-toggle dark:bg-transparenttext-gray-500 flex w-full items-center gap-x-3.5 rounded-lg px-2.5 py-2 text-start text-sm text-slate-700 hover:bg-gray-100 hover:text-gray-600 hs-accordion-active:text-blue-600 hs-accordion-active:hover:bg-transparent dark:text-slate-400 dark:hover:bg-gray-900 dark:hover:text-slate-300 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600 dark:hs-accordion-active:text-white"
                         >
                           XYZ
                         </button>
@@ -133,7 +133,7 @@ export default function Layout({
               <li className="hs-accordion" id="account-accordion">
                 <button
                   type="button"
-                  className="hs-accordion-toggle flex w-full items-center gap-x-3.5 rounded-lg px-2.5 py-2 text-start text-sm text-slate-700 hover:bg-gray-100 hs-accordion-active:text-blue-600 hs-accordion-active:hover:bg-transparent dark:bg-gray-800 dark:text-slate-400 dark:hover:bg-gray-900 dark:hover:text-slate-300 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600 dark:hs-accordion-active:text-white"
+                  className="hs-accordion-toggle dark:bg-transparenttext-gray-500 flex w-full items-center gap-x-3.5 rounded-lg px-2.5 py-2 text-start text-sm text-slate-700 hover:bg-gray-100 hover:text-gray-600 hs-accordion-active:text-blue-600 hs-accordion-active:hover:bg-transparent dark:text-slate-400 dark:hover:bg-gray-900 dark:hover:text-slate-300 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600 dark:hs-accordion-active:text-white"
                 >
                   <svg
                     className="size-4"
@@ -198,7 +198,7 @@ export default function Layout({
                   <ul className="ps-2 pt-2">
                     <li>
                       <a
-                        className="flex items-center gap-x-3.5 rounded-lg px-2.5 py-2 text-sm text-slate-700 hover:bg-gray-100 dark:bg-gray-800 dark:text-slate-400 dark:hover:text-slate-300 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
+                        className="dark:bg-transparenttext-gray-500 flex items-center gap-x-3.5 rounded-lg px-2.5 py-2 text-sm text-slate-700 hover:bg-gray-100 hover:text-gray-600 dark:text-slate-400 dark:hover:text-slate-300 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
                         href="#"
                       >
                         Link 1
@@ -206,7 +206,7 @@ export default function Layout({
                     </li>
                     <li>
                       <a
-                        className="flex items-center gap-x-3.5 rounded-lg px-2.5 py-2 text-sm text-slate-700 hover:bg-gray-100 dark:bg-gray-800 dark:text-slate-400 dark:hover:text-slate-300 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
+                        className="dark:bg-transparenttext-gray-500 flex items-center gap-x-3.5 rounded-lg px-2.5 py-2 text-sm text-slate-700 hover:bg-gray-100 hover:text-gray-600 dark:text-slate-400 dark:hover:text-slate-300 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
                         href="#"
                       >
                         Link 2
@@ -214,7 +214,7 @@ export default function Layout({
                     </li>
                     <li>
                       <a
-                        className="flex items-center gap-x-3.5 rounded-lg px-2.5 py-2 text-sm text-slate-700 hover:bg-gray-100 dark:bg-gray-800 dark:text-slate-400 dark:hover:text-slate-300 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
+                        className="dark:bg-transparenttext-gray-500 flex items-center gap-x-3.5 rounded-lg px-2.5 py-2 text-sm text-slate-700 hover:bg-gray-100 hover:text-gray-600 dark:text-slate-400 dark:hover:text-slate-300 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
                         href="#"
                       >
                         Link 3
@@ -224,10 +224,10 @@ export default function Layout({
                 </div>
               </li>
 
-              <li className="hs-accordion" id="projects-accordion">
+              {/* <li className="hs-accordion" id="projects-accordion">
                 <button
                   type="button"
-                  className="hs-accordion-toggle flex w-full items-center gap-x-3.5 rounded-lg px-2.5 py-2 text-start text-sm text-slate-700 hover:bg-gray-100 hs-accordion-active:text-blue-600 hs-accordion-active:hover:bg-transparent dark:bg-gray-800 dark:text-slate-400 dark:hover:bg-gray-900 dark:hover:text-slate-300 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600 dark:hs-accordion-active:text-white"
+                  className="hs-accordion-toggle dark:bg-transparenttext-gray-500 flex w-full items-center gap-x-3.5 rounded-lg px-2.5 py-2 text-start text-sm text-slate-700 hover:bg-gray-100 hover:text-gray-600 hs-accordion-active:text-blue-600 hs-accordion-active:hover:bg-transparent dark:text-slate-400 dark:hover:bg-gray-900 dark:hover:text-slate-300 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600 dark:hs-accordion-active:text-white"
                 >
                   <svg
                     className="size-4"
@@ -284,7 +284,7 @@ export default function Layout({
                   <ul className="ps-2 pt-2">
                     <li>
                       <a
-                        className="flex items-center gap-x-3.5 rounded-lg px-2.5 py-2 text-sm text-slate-700 hover:bg-gray-100 dark:bg-gray-800 dark:text-slate-400 dark:hover:text-slate-300 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
+                        className="dark:bg-transparenttext-gray-500 flex items-center gap-x-3.5 rounded-lg px-2.5 py-2 text-sm text-slate-700 hover:bg-gray-100 hover:text-gray-600 dark:text-slate-400 dark:hover:text-slate-300 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
                         href="#"
                       >
                         Link 1
@@ -292,7 +292,7 @@ export default function Layout({
                     </li>
                     <li>
                       <a
-                        className="flex items-center gap-x-3.5 rounded-lg px-2.5 py-2 text-sm text-slate-700 hover:bg-gray-100 dark:bg-gray-800 dark:text-slate-400 dark:hover:text-slate-300 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
+                        className="dark:bg-transparenttext-gray-500 flex items-center gap-x-3.5 rounded-lg px-2.5 py-2 text-sm text-slate-700 hover:bg-gray-100 hover:text-gray-600 dark:text-slate-400 dark:hover:text-slate-300 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
                         href="#"
                       >
                         Link 2
@@ -300,7 +300,7 @@ export default function Layout({
                     </li>
                     <li>
                       <a
-                        className="flex items-center gap-x-3.5 rounded-lg px-2.5 py-2 text-sm text-slate-700 hover:bg-gray-100 dark:bg-gray-800 dark:text-slate-400 dark:hover:text-slate-300 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
+                        className="dark:bg-transparenttext-gray-500 flex items-center gap-x-3.5 rounded-lg px-2.5 py-2 text-sm text-slate-700 hover:bg-gray-100 hover:text-gray-600 dark:text-slate-400 dark:hover:text-slate-300 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
                         href="#"
                       >
                         Link 3
@@ -341,6 +341,7 @@ export default function Layout({
                   Calendar
                 </a>
               </li>
+
               <li>
                 <a
                   className="flex items-center gap-x-3.5 rounded-lg px-2.5 py-2 text-sm text-slate-700 hover:bg-gray-100 dark:text-slate-400 dark:hover:bg-gray-900 dark:hover:text-slate-300 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
@@ -363,7 +364,7 @@ export default function Layout({
                   </svg>
                   Documentation
                 </a>
-              </li>
+              </li> */}
             </ul>
           </nav>
         </div>

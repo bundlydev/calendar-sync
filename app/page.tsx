@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { auth } from "@/auth";
 import { HomeLogin } from "@/components/auth-components";
-import { LucideSwords, Search, User } from "lucide-react";
+import { LucideSwords, Menu, User } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Home",
@@ -13,14 +13,14 @@ export const metadata: Metadata = {
 export default async function Page() {
   const session = await auth();
   return (
-    <div className="container mx-auto">
-      <header className="flex w-full flex-wrap bg-white py-4 text-sm dark:bg-gray-800 sm:flex-nowrap sm:justify-start">
+    <div className="container mx-auto md:max-w-7xl">
+      <header className="flex w-full flex-wrap bg-white px-2 py-4 text-sm dark:bg-transparent sm:flex-nowrap sm:justify-start lg:px-0">
         <nav
-          className="mx-auto flex w-full max-w-[85rem] basis-full flex-wrap items-center justify-between px-4"
+          className="mx-auto flex w-full basis-full flex-wrap items-center justify-between"
           aria-label="Global"
         >
           <a
-            className="flex-none text-xl font-semibold dark:text-white sm:order-1"
+            className="flex-none text-xl font-semibold dark:text-gray-200 sm:order-1"
             href="#"
           >
             <Image
@@ -28,53 +28,28 @@ export default async function Page() {
               alt="CalendSync"
               width={210}
               height={30}
-              className="dark:invert"
+              className="dark:brightness-100 dark:contrast-100 dark:grayscale dark:invert dark:filter"
             />
           </a>
           <div className="flex items-center gap-x-2 sm:order-3">
             <button
               type="button"
-              className="hs-collapse-toggle inline-flex items-center justify-center gap-x-2 rounded-lg border border-gray-200 bg-white p-2.5 text-gray-800 shadow-sm hover:bg-gray-50 disabled:pointer-events-none disabled:opacity-50 dark:border-gray-700 dark:bg-transparent dark:text-white dark:hover:bg-white/10 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600 sm:hidden"
+              className="hs-collapse-toggle inline-flex items-center justify-center gap-x-2 rounded-lg border border-gray-200 bg-white p-2.5 text-gray-800 shadow-sm hover:bg-gray-50 disabled:pointer-events-none disabled:opacity-50 dark:border-gray-700 dark:bg-transparent dark:text-gray-200  dark:hover:bg-white/10 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600 sm:hidden"
               data-hs-collapse="#navbar-alignment"
               aria-controls="navbar-alignment"
               aria-label="Toggle navigation"
             >
-              <svg
-                className="size-4 flex-shrink-0 hs-collapse-open:hidden"
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <line x1="3" x2="21" y1="6" y2="6" />
-                <line x1="3" x2="21" y1="12" y2="12" />
-                <line x1="3" x2="21" y1="18" y2="18" />
-              </svg>
-              <svg
-                className="size-4 hidden flex-shrink-0 hs-collapse-open:block"
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M18 6 6 18" />
-                <path d="m6 6 12 12" />
-              </svg>
+              <Menu width={24} height={24} />
             </button>
-            <Search width={20} height={20} opacity={0.5} className="mx-4" />
+            {/* <Search
+              width={20}
+              height={20}
+              opacity={0.5}
+              className="mx-4 dark:invert"
+            /> */}
             {session?.user && (
-              <Link href="/home">
-                <button className="inline-flex items-center gap-x-2 rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-800 shadow-sm hover:bg-gray-50 disabled:pointer-events-none disabled:opacity-50 dark:border-gray-700 dark:bg-slate-900 dark:text-white dark:hover:bg-gray-800 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">
+              <Link href="/home/synchro" className="hidden sm:inline-block">
+                <button className="inline-flex items-center gap-x-2 rounded-lg border border-gray-200 px-3 py-2 text-sm font-medium text-gray-800 shadow-sm transition ease-out hover:scale-105 hover:bg-gray-50 disabled:pointer-events-none disabled:opacity-50 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-800 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">
                   <User width={15} height={15} />
                   Hello {session.user.name}
                 </button>
@@ -86,15 +61,15 @@ export default async function Page() {
             id="navbar-alignment"
             className="hs-collapse hidden grow basis-full overflow-hidden transition-all duration-300 sm:order-2 sm:block sm:grow-0 sm:basis-auto"
           >
-            <div className="mt-5 flex flex-col gap-5 sm:mt-0 sm:flex-row sm:items-center sm:ps-5">
+            <div className="mt-5 flex flex-col gap-5 sm:mt-0 sm:flex-row sm:items-center sm:justify-center sm:gap-0 sm:ps-5">
               <a
-                className="font-medium text-blue-500 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
-                href="#"
+                className="font-medium text-blue-500 dark:text-gray-200 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
+                href="/"
                 aria-current="page"
               >
                 Landing
               </a>
-              <a
+              {/* <a
                 className="font-medium text-gray-600 hover:text-gray-400 dark:text-gray-400 dark:hover:text-gray-500 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
                 href="#"
               >
@@ -120,24 +95,35 @@ export default async function Page() {
                 <span className="font-base mx-1 inline-flex items-center gap-x-1.5 rounded-full bg-blue-100 px-2 py-1 text-xs text-blue-800 dark:bg-blue-800/30 dark:text-blue-500">
                   New
                 </span>
-              </a>
+              </a> */}
             </div>
+            {session?.user && (
+              <Link href="/home/synchro" className="sm:hidden">
+                <button className="inline-flex items-center gap-x-2 rounded-lg py-2 text-sm font-medium text-gray-800 disabled:pointer-events-none disabled:opacity-50 dark:border-gray-700 dark:text-gray-200 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">
+                  Hello {session.user.name}
+                  <User width={15} height={15} />
+                </button>
+              </Link>
+            )}
           </div>
         </nav>
       </header>
-      <section className="mt-8 flex flex-col">
+      <section className="mt-8 flex flex-col px-4 lg:px-0">
         {/* 2 sections half and half*/}
         <div className="flex flex-row justify-between">
           <div className="flex flex-1 flex-col items-start justify-center">
-            <h1 className="text-left text-6xl font-bold text-gray-800">
+            <h1 className="text-left text-4xl font-bold text-gray-800 dark:text-gray-200 sm:text-6xl">
               Finally fix your calendar <br /> game
             </h1>
-            <p className="mt-4 text-left text-xl font-light text-gray-600">
-              Calendars that talk with each other, so you can <br /> focus on
-              what really matters.
+            <p className="text-balance mt-4 max-w-[100vw] text-left text-lg font-light text-gray-600 dark:text-gray-400 sm:text-xl md:max-w-lg">
+              Calendars that talk with each other, so you can focus on what
+              really matters.
             </p>
-            <div className="mt-8 flex flex-row items-center justify-center">
-              <p className="mr-6 text-base font-bold">COMPATIBLE WITH:</p>
+
+            <div className="mt-8 flex flex-col space-y-4 self-start md:flex-row md:items-center md:justify-center md:space-y-0">
+              <p className="mr-6 text-base font-bold dark:text-gray-200">
+                COMPATIBLE WITH:
+              </p>
               {/* GCALENDAR LOGO with text */}
               <div className="mx-2 flex flex-row items-center justify-center">
                 <Image
@@ -146,36 +132,55 @@ export default async function Page() {
                   width={24}
                   height={24}
                 />
-                <p className="mx-4 text-base font-semibold">Gmail</p>
+                <p className="mx-4 text-base font-semibold dark:text-gray-200">
+                  Gmail
+                </p>
               </div>
               <div className="mx-2 flex flex-row items-center justify-center">
                 {/* OUTLOOK LOGO with text */}
-                <Image src="/notion.png" alt="Notion" width={24} height={24} />
-                <p className="mx-4 text-base font-semibold">Notion</p>
+                <Image
+                  src="/notion.png"
+                  alt="Notion"
+                  width={24}
+                  height={24}
+                  className="dark:invert"
+                />
+                <p className="mx-4 text-base font-semibold dark:text-gray-200">
+                  Notion
+                </p>
               </div>
               <div className="mx-2 flex flex-row items-center justify-center">
                 {/* APPLE LOGO with text */}
-                <Image src="/apple.png" alt="Apple" width={24} height={24} />
-                <p className="mx-4 text-base font-semibold">Apple</p>
+                <Image
+                  src="/apple.png"
+                  alt="Apple"
+                  width={24}
+                  height={24}
+                  className="dark:invert"
+                />
+                <p className="mx-4 text-base font-semibold dark:text-gray-200">
+                  Apple
+                </p>
               </div>
             </div>
-            <div className="mt-10">
+
+            <div className="mt-10 flex w-full flex-col space-y-4 sm:w-auto sm:flex-row sm:space-y-0">
               <button
                 type="button"
-                className="inline-flex items-center gap-x-2 rounded-lg border border-transparent bg-gray-800 px-8 py-3.5 text-sm font-semibold text-white hover:bg-gray-900 disabled:pointer-events-none disabled:opacity-50 dark:bg-white dark:text-gray-800 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
+                className="inline-flex h-auto min-w-[150px] items-center justify-center rounded-lg border border-transparent bg-gray-800 px-4 py-3.5 text-sm font-semibold text-white transition ease-out hover:scale-105 disabled:pointer-events-none disabled:opacity-50 dark:border-white dark:text-gray-200 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
               >
                 Get Started
               </button>
               <button
                 type="button"
-                className="ml-6 inline-flex items-center gap-x-2 rounded-lg border border-gray-800 px-12 py-3.5 text-sm font-semibold text-gray-800 hover:border-gray-500 hover:text-gray-500 disabled:pointer-events-none disabled:opacity-50 dark:border-white dark:text-white dark:hover:border-gray-300 dark:hover:text-gray-300 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
+                className="inline-flex items-center justify-center rounded-lg border border-gray-800 px-12 py-3.5 text-sm font-semibold text-gray-800 transition ease-out hover:scale-105 disabled:pointer-events-none disabled:opacity-50 dark:border-gray-600 dark:text-gray-200 dark:hover:border-gray-300 dark:hover:text-gray-300 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600 sm:ml-6"
               >
                 Playground
               </button>
             </div>
           </div>
 
-          <div className="flex-1">
+          <div className="hidden flex-1 sm:inline-block">
             <Image
               src="/calendar.jpeg"
               alt="Calendar"
@@ -186,37 +191,37 @@ export default async function Page() {
           </div>
         </div>
       </section>
-      <section className="mt-8 flex flex-col items-center justify-center">
-        <div className="mt-8 flex flex-row justify-between">
+      <section className="mt-12 hidden flex-col items-center px-4 md:flex lg:px-0">
+        <div className="mt-8 flex flex-row justify-around">
           <div className="mr-2 flex flex-1 flex-row items-center justify-center">
-            <LucideSwords size={32} className="mr-4 self-start" />
+            <LucideSwords size={32} className="mr-4 self-start dark:invert" />
             <div className="flex flex-col pr-8">
-              <p className="text-sm font-bold text-gray-800 dark:text-white">
+              <p className="text-sm font-bold text-gray-800 dark:text-gray-200">
                 Connect your calendars
               </p>
-              <p className="text-sm font-light text-gray-600 dark:text-gray-300">
+              <p className="max-w-xs text-sm font-light text-gray-600 dark:text-gray-300">
                 Connect your calendars from Google, Apple, Outlook, and Notion
               </p>
             </div>
           </div>
-          <div className="flex flex-1 flex-row items-center justify-center ">
-            <LucideSwords size={32} className="mr-4 self-start" />
+          <div className="flex flex-1 flex-row items-center justify-center">
+            <LucideSwords size={32} className="mr-4 self-start dark:invert" />
             <div className="flex flex-col pr-8">
-              <p className="text-sm font-bold text-gray-800 dark:text-white">
+              <p className="text-sm font-bold text-gray-800 dark:text-gray-200">
                 Sync your events
               </p>
-              <p className="text-sm font-light text-gray-600 dark:text-gray-300">
+              <p className="max-w-xs text-sm font-light text-gray-600 dark:text-gray-300">
                 Connect your calendars from Google, Apple, Outlook, and Notion
               </p>
             </div>
           </div>
           <div className="ml-2 flex flex-1 flex-row items-center justify-center">
-            <LucideSwords size={32} className="mr-4 self-start" />
+            <LucideSwords size={32} className="mr-4 self-start dark:invert" />
             <div className="flex flex-col pr-8">
-              <p className="text-sm font-bold text-gray-800 dark:text-white">
+              <p className="text-sm font-bold text-gray-800 dark:text-gray-200">
                 Enjoy your life
               </p>
-              <p className="text-sm font-light text-gray-600 dark:text-gray-300">
+              <p className="max-w-xs text-sm font-light text-gray-600 dark:text-gray-300">
                 Connect your calendars from Google, Apple, Outlook, and Notion
               </p>
             </div>

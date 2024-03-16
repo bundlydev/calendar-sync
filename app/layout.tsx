@@ -23,7 +23,7 @@ export default function RootLayout({
     <html lang="en" data-theme="dark" className={inter.className}>
       <head />
 
-      <body className="">
+      <body className="h-full dark:bg-black">
         <main className="">{children}</main>
       </body>
 

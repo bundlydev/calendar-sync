@@ -9,9 +9,11 @@ import {
   AllDayEventConfigEnum,
   PrivacyCalendarSyncTaskEnum,
 } from "@prisma/client";
+import { useFormState } from "react-dom";
 import { useForm } from "react-hook-form";
 
 import { createSyncTask } from "./action";
+import { SubmitButton } from "./submit-button";
 
 interface ISyncForm {
   color: string;
@@ -20,21 +22,24 @@ interface ISyncForm {
   sourceCredentialId: string;
   toCredentialId: string;
 }
+const initialState = {
+  color: "#2563eb",
+  privacy: "personal",
+  allDayEventConfig: "no-all-day",
+  sourceCredentialId: "",
+  toCredentialId: "",
+};
 
 const Form = () => {
+  const [state, formAction] = useFormState(createSyncTask, initialState);
   const { register, watch, setValue } = useForm<ISyncForm>({
-    defaultValues: {
-      color: "#2563eb",
-      privacy: "personal",
-      allDayEventConfig: "no-all-day",
-      sourceCredentialId: "",
-      toCredentialId: "",
-    },
+    defaultValues: {},
   });
 
   const [calendarList, setCalendarList] = useState<TGetCalendarList | never[]>(
     [],
   );
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchCalendars = async () => {
@@ -46,27 +51,21 @@ const Form = () => {
         return;
       }
       setCalendarList(parsed.data);
+      setLoading(false);
     };
-    fetchCalendars();
+    void fetchCalendars();
   }, []);
 
   return (
-    <form
-      className="mt-8"
-      action={createSyncTask}
-      // onSubmit={(event) => {
-      //   event.preventDefault();
-      //   return onSubmit;
-      // }}
-    >
+    <form className="m-auto mt-8 lg:max-w-screen-md" action={formAction}>
       <div>
         {/* Card */}
-        <div className="flex flex-col rounded-xl border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-slate-900 dark:text-gray-400 md:p-5 lg:max-w-screen-md">
+        <div className="flex flex-col rounded-xl border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-transparent dark:text-gray-400 md:p-5">
           {/* This has to be split in 2 selects */}
           <div className="flex flex-row">
             <div className="flex-1 px-4">
-              <h2 className="text-base font-bold">From</h2>
-              <p className="text-sm text-gray-500">
+              <h2 className="text-base font-bold dark:text-gray-100">From</h2>
+              <p className="text-sm text-gray-500 dark:text-gray-200">
                 Choose the calendar you want to sync from
               </p>
               <select
@@ -75,8 +74,11 @@ const Form = () => {
                 onChange={(e) => {
                   setValue("sourceCredentialId", e.target.value);
                 }}
+                disabled={loading}
               >
-                <option value="">Select a calendar</option>
+                <option value="">
+                  {loading ? "Loading..." : "Select a calendar"}
+                </option>
                 {calendarList.map((calendar) => (
                   <option key={calendar.id} value={calendar.id}>
                     {calendar?.calendars[0]?.name ?? ""}
@@ -85,8 +87,8 @@ const Form = () => {
               </select>
             </div>
             <div className="flex-1 px-4">
-              <h2 className="text-base font-bold">To</h2>
-              <p className="text-sm text-gray-500">
+              <h2 className="text-base font-bold dark:text-gray-100">To</h2>
+              <p className="text-sm text-gray-500 dark:text-gray-200">
                 Choose the calendar you want to sync to
               </p>
               <select
@@ -95,9 +97,12 @@ const Form = () => {
                 onChange={(e) => {
                   setValue("toCredentialId", e.target.value);
                 }}
+                disabled={loading}
               >
                 {/* Default option */}
-                <option value="">Select a calendar</option>
+                <option value="">
+                  {loading ? "Loading..." : "Select a calendar"}
+                </option>
                 {/* Calendar list */}
                 {calendarList
                   .filter((item) => {
@@ -117,8 +122,8 @@ const Form = () => {
       <div className="mt-4">
         {/* What color */}
         <h2 className="text-base font-bold">Colors and style</h2>
-        <p className="text-sm text-gray-500">
-          Choose a color and style to represent this sync in your calendar.
+        <p className="text-sm text-gray-500 dark:text-gray-200">
+          Pick a color and style to represent this sync in your calendar.
         </p>
 
         <input
@@ -136,7 +141,7 @@ const Form = () => {
       {/* Privacy/Visibility */}
       <div className="mt-4">
         <h2 className="text-base font-bold">Privacy settings</h2>
-        <p className="text-sm text-gray-500">
+        <p className="text-sm text-gray-200">
           Choose a privacy that adjust your needs
         </p>
         <div className="mt-4 grid space-y-3">
@@ -220,36 +225,13 @@ const Form = () => {
               </span>
             </label>
           </div>
-
-          {/* <div className="relative flex items-start">
-            <div className="mt-1 flex h-5 items-center">
-              <input
-                id="hs-radio-archive"
-                type="radio"
-                className="rounded-full border-gray-200 text-blue-600 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-800 dark:checked:border-blue-500 dark:checked:bg-blue-500 dark:focus:ring-offset-gray-800"
-                aria-describedby="hs-radio-archive-description"
-                {...register("privacy")}
-              />
-            </div>
-            <label htmlFor="hs-radio-archive" className="ms-3">
-              <span className="block text-sm font-semibold text-gray-800 dark:text-gray-300">
-                Event details for you and those with access, otherwise busy
-              </span>
-              <span
-                id="hs-radio-archive-description"
-                className="block text-sm text-gray-600 dark:text-gray-500"
-              >
-                Details for you and others with access, others busy.
-              </span>
-            </label>
-          </div> */}
         </div>
       </div>
 
       {/* All day events */}
       <div>
         <h2 className="mt-8 text-base font-bold">All day events</h2>
-        <p className="text-sm text-gray-500">
+        <p className="text-sm text-gray-500 dark:text-gray-200">
           Choose how you want to handle all day events
         </p>
         {/* Dont sync */}
@@ -341,18 +323,19 @@ const Form = () => {
       </div>
 
       {/* Save option */}
-      <div className="mt-8">
-        <button
+      <div className="mt-8 flex justify-end">
+        <SubmitButton />
+        {/* <button
           type="submit"
-          className="inline-flex items-center gap-x-2 rounded-lg border border-transparent bg-gray-800 px-4 py-3 text-sm font-semibold text-white hover:bg-gray-900 disabled:pointer-events-none disabled:opacity-50 dark:bg-white dark:text-gray-800 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
+          className="inline-flex items-center gap-x-2 self-end rounded-lg border border-transparent bg-gray-800 px-4 py-3 text-sm font-semibold text-white hover:bg-gray-900 disabled:pointer-events-none disabled:opacity-50 dark:bg-white dark:text-gray-800 hover:dark:bg-gray-200 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
         >
           Save
-        </button>
+        </button> */}
       </div>
 
       {/* Delete option as danger */}
 
-      <div className="mt-8">
+      {/* <div className="mt-8">
         <h2 className="text-base font-bold">Danger Zone</h2>
         <p className="text-sm text-gray-500">
           This action is irreversible, be careful
@@ -364,7 +347,7 @@ const Form = () => {
         >
           Delete Sync
         </button>
-      </div>
+      </div> */}
     </form>
   );
 };

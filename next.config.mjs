@@ -27,10 +27,22 @@ const config = {
 
   // Remote images host
   images: {
-    domains: [
-      "lh3.googleusercontent.com",
-      "placehold.it",
-      "images.unsplash.com",
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "lh3.googleusercontent.com",
+        pathname: "/*",
+      },
+      {
+        protocol: "https",
+        hostname: "placehold.it",
+        pathname: "/*",
+      },
+      {
+        protocol: "https",
+        hostname: "images.unsplash.com",
+        pathname: "/*",
+      },
     ],
   },
 };
