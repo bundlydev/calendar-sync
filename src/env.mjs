@@ -5,7 +5,7 @@ import { z } from "zod";
  * This way you can ensure the app isn't built with invalid env vars.
  */
 const server = z.object({
-  DATABASE_URL: z.string().url(),
+  DATABASE_URL: z.string().url().optional(),
   NODE_ENV: z.enum(["development", "test", "production"]),
   AUTH_SECRET:
     process.env.NODE_ENV === "production"
@@ -16,6 +16,7 @@ const server = z.object({
   CALENDAR_SYNC_WEB_URL: z.string().optional(),
   GOOGLE_NOTIFICATIONS_ENABLED: z.string().optional(),
   GOOGLE_NOTIFICATIONS_EXPIRATION_MINUTES: z.coerce.number().optional(),
+  CRON_SECRET: z.string().optional(),
 });
 
 /**
@@ -43,6 +44,7 @@ const processEnv = {
   GOOGLE_NOTIFICATIONS_EXPIRATION_MINUTES:
     process.env.GOOGLE_NOTIFICATIONS_EXPIRATION_MINUTES,
   NEXT_PUBLIC_CALENDAR_SYNC_WEB_URL: process.env.CALENDAR_SYNC_WEB_URL,
+  CRON_SECRET: process.env.CRON_SECRET,
 };
 
 // Don't touch the part below

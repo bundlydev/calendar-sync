@@ -27,6 +27,7 @@
     "@fullcalendar/timegrid": "^6.1.11",
     "@hookform/resolvers": "^3.0.0",
     "@preline/overlay": "^2.0.2",
+    "@preline/remove-element": "^2.0.2",
     "@prisma/client": "^5.0.0",
     "@radix-ui/react-avatar": "^1.0.2",
     "@radix-ui/react-dialog": "^1.0.3",

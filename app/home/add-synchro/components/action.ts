@@ -23,10 +23,11 @@ const ZCreateSyncTask = z.object({
   allDayEventConfig: z.nativeEnum(AllDayEventConfigEnum),
 });
 
-export async function createSyncTask(rawData: FormData) {
+export async function createSyncTask(_formState: any, rawFormData: FormData) {
   // Convert FormData to JSON
+  // console.log("rawData", rawData);
   const formData = {};
-  for (const [key, value] of rawData.entries()) {
+  for (const [key, value] of rawFormData.entries()) {
     // @TODO: fix ts error
     // @ts-expect-error todo
     formData[key] = value;

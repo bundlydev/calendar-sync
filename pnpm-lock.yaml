@@ -32,6 +32,9 @@ dependencies:
   '@preline/overlay':
     specifier: ^2.0.2
     version: 2.0.2
+  '@preline/remove-element':
+    specifier: ^2.0.2
+    version: 2.0.2
   '@prisma/client':
     specifier: ^5.0.0
     version: 5.0.0(prisma@5.0.0)
@@ -1017,6 +1020,10 @@ packages:
 
   /@preline/overlay@2.0.2:
     resolution: {integrity: sha512-X3Lw6zRsgxqEnjAqHUYnJD/88NAb2+Q3OlXmvepNmADfUPnWb+rxem2k/M56qiWfP767sZuhDvNeXTlQnGZciA==}
+    dev: false
+
+  /@preline/remove-element@2.0.2:
+    resolution: {integrity: sha512-YMBEoMf4ZLnTvicqxQY2CSjMuu2b/mJZ61bTCnAWBrsa+Wh2QANk5vqiL9IWWE1ud6ZbfZ8WwK4De4J6M1K0kg==}
     dev: false
 
   /@prisma/client@5.0.0(prisma@5.0.0):

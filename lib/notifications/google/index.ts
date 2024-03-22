@@ -38,7 +38,7 @@ class GoogleNotification {
       where: {
         credentialId,
         expiration: {
-          gte: new Date(),
+          gte: addMinute(new Date(), 61),
         },
       },
     });
@@ -57,6 +57,7 @@ class GoogleNotification {
         address: `https://7d37-200-76-22-226.ngrok-free.app/api/notifications/webhook/google`,
         credentialId,
         calendarSyncTaskId,
+        calendarId,
       },
     });
 
@@ -71,7 +72,7 @@ class GoogleNotification {
     if (!notification) {
       throw new Error("Failed to find a notification");
     }
-    console.log(expirationOffsetUnixDate);
+
     const res = await calendarApi.events.watch({
       calendarId: calendarId || "primary",
       requestBody: {

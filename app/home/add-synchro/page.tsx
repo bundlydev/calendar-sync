@@ -1,7 +1,6 @@
 import { Suspense } from "react";
 import Header from "@/app/components/header";
 
-// import CalendarList from "./components/calendar-list";
 import Form from "./components/form";
 
 const AddSynchroPage = () => {

@@ -171,12 +171,12 @@ export default async function Page() {
               >
                 Get Started
               </button>
-              <button
+              {/* <button
                 type="button"
                 className="inline-flex items-center justify-center rounded-lg border border-gray-800 px-12 py-3.5 text-sm font-semibold text-gray-800 transition ease-out hover:scale-105 disabled:pointer-events-none disabled:opacity-50 dark:border-gray-600 dark:text-gray-200 dark:hover:border-gray-300 dark:hover:text-gray-300 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600 sm:ml-6"
               >
                 Playground
-              </button>
+              </button> */}
             </div>
           </div>
 

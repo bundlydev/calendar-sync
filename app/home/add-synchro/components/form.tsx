@@ -5,36 +5,22 @@ import {
   ZGetCalendarListSchema,
   type TGetCalendarList,
 } from "@/app/api/apps/calendar/list/schemas";
+import { AddCalendar } from "@/app/components/credential-tab-list/components/add-calendar";
 import {
   AllDayEventConfigEnum,
   PrivacyCalendarSyncTaskEnum,
 } from "@prisma/client";
 import { useFormState } from "react-dom";
-import { useForm } from "react-hook-form";
 
 import { createSyncTask } from "./action";
 import { SubmitButton } from "./submit-button";
 
-interface ISyncForm {
-  color: string;
-  privacy: string;
-  allDayEventConfig: string;
-  sourceCredentialId: string;
-  toCredentialId: string;
-}
 const initialState = {
-  color: "#2563eb",
-  privacy: "personal",
-  allDayEventConfig: "no-all-day",
-  sourceCredentialId: "",
-  toCredentialId: "",
+  message: "",
 };
 
 const Form = () => {
   const [state, formAction] = useFormState(createSyncTask, initialState);
-  const { register, watch, setValue } = useForm<ISyncForm>({
-    defaultValues: {},
-  });
 
   const [calendarList, setCalendarList] = useState<TGetCalendarList | never[]>(
     [],
@@ -57,7 +43,7 @@ const Form = () => {
   }, []);
 
   return (
-    <form className="m-auto mt-8 lg:max-w-screen-md" action={formAction}>
+    <form className="m-auto mt-8" action={formAction}>
       <div>
         {/* Card */}
         <div className="flex flex-col rounded-xl border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-transparent dark:text-gray-400 md:p-5">
@@ -66,14 +52,18 @@ const Form = () => {
             <div className="flex-1 px-4">
               <h2 className="text-base font-bold dark:text-gray-100">From</h2>
               <p className="text-sm text-gray-500 dark:text-gray-200">
-                Choose the calendar you want to sync from
+                Calendar you want to sync from
               </p>
+
               <select
-                {...register("sourceCredentialId")}
+                id="sourceCredentialId"
+                name="sourceCredentialId"
+                defaultValue={state?.select?.sourceCredentialId}
+                // {...register("sourceCredentialId")}
                 className="mt-4 w-full rounded-lg border border-gray-200 bg-white p-2 dark:border-gray-700 dark:bg-slate-900"
-                onChange={(e) => {
-                  setValue("sourceCredentialId", e.target.value);
-                }}
+                // onChange={(e) => {
+                // setValue("sourceCredentialId", e.target.value);
+                // }}
                 disabled={loading}
               >
                 <option value="">
@@ -89,14 +79,16 @@ const Form = () => {
             <div className="flex-1 px-4">
               <h2 className="text-base font-bold dark:text-gray-100">To</h2>
               <p className="text-sm text-gray-500 dark:text-gray-200">
-                Choose the calendar you want to sync to
+                Calendar you want to sync to
               </p>
               <select
-                {...register("toCredentialId")}
+                id="toCredentialId"
+                name="toCredentialId"
+                // {...register("toCredentialId")}
                 className="mt-4 w-full rounded-lg border border-gray-200 bg-white p-2 dark:border-gray-700 dark:bg-slate-900"
-                onChange={(e) => {
-                  setValue("toCredentialId", e.target.value);
-                }}
+                // onChange={(e) => {
+                // setValue("toCredentialId", e.target.value);
+                // }}
                 disabled={loading}
               >
                 {/* Default option */}
@@ -105,9 +97,9 @@ const Form = () => {
                 </option>
                 {/* Calendar list */}
                 {calendarList
-                  .filter((item) => {
-                    return item.id !== watch("sourceCredentialId");
-                  })
+                  // .filter((item) => {
+                  //   return item.id !== watch("sourceCredentialId");
+                  // })
                   .map((calendar) => (
                     <option key={calendar.id} value={calendar.id}>
                       {calendar?.calendars[0]?.name}
@@ -115,6 +107,13 @@ const Form = () => {
                   ))}
               </select>
             </div>
+          </div>
+
+          <div className="mt-4 flex flex-row justify-end px-4">
+            <p className="mr-2 text-base underline">
+              Want to add another calendar?
+            </p>
+            <AddCalendar />
           </div>
         </div>
       </div>
@@ -127,15 +126,11 @@ const Form = () => {
         </p>
 
         <input
+          id="color"
+          name="color"
           type="color"
           className="mt-4 block h-10 w-14 cursor-pointer rounded-lg border border-gray-200 bg-white p-1 disabled:pointer-events-none disabled:opacity-50 dark:border-gray-700 dark:bg-slate-900"
-          id="hs-color-input"
-          value={watch("color")}
           title="Choose your color"
-          {...register("color")}
-          onChange={(e) => {
-            setValue("color", e.target.value);
-          }}
         />
       </div>
       {/* Privacy/Visibility */}
@@ -148,15 +143,12 @@ const Form = () => {
           <div className="relative flex items-start">
             <div className="mt-1 flex h-5 items-center">
               <input
-                id="hs-radio-delete"
+                id="privacy"
+                name="privacy"
                 type="radio"
                 className="rounded-full border-gray-200 text-blue-600 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-800 dark:checked:border-blue-500 dark:checked:bg-blue-500 dark:focus:ring-offset-gray-800"
                 aria-describedby="hs-radio-delete-description"
                 value={PrivacyCalendarSyncTaskEnum.Personal}
-                {...register("privacy")}
-                onChange={(e) => {
-                  setValue("privacy", e.target.value);
-                }}
               />
             </div>
             <label htmlFor="hs-radio-delete" className="ms-3">
@@ -175,15 +167,12 @@ const Form = () => {
           <div className="relative flex items-start">
             <div className="mt-1 flex h-5 items-center">
               <input
-                id="hs-radio-archive"
+                id="privacy"
+                name="privacy"
                 type="radio"
                 className="rounded-full border-gray-200 text-blue-600 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-800 dark:checked:border-blue-500 dark:checked:bg-blue-500 dark:focus:ring-offset-gray-800"
                 aria-describedby="hs-radio-archive-description"
                 value={PrivacyCalendarSyncTaskEnum.Busy}
-                {...register("privacy")}
-                onChange={(e) => {
-                  setValue("privacy", e.target.value);
-                }}
               />
             </div>
             <label htmlFor="hs-radio-archive" className="ms-3">
@@ -202,15 +191,12 @@ const Form = () => {
           <div className="relative flex items-start">
             <div className="mt-1 flex h-5 items-center">
               <input
-                id="hs-radio-archive"
+                id="privacy"
+                name="privacy"
                 type="radio"
                 className="rounded-full border-gray-200 text-blue-600 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-800 dark:checked:border-blue-500 dark:checked:bg-blue-500 dark:focus:ring-offset-gray-800"
                 aria-describedby="hs-radio-archive-description"
                 value={PrivacyCalendarSyncTaskEnum.Partial}
-                {...register("privacy")}
-                onChange={(e) => {
-                  setValue("privacy", e.target.value);
-                }}
               />
             </div>
             <label htmlFor="hs-radio-archive" className="ms-3">
@@ -241,15 +227,12 @@ const Form = () => {
           <div className="relative flex items-start">
             <div className="mt-1 flex h-5 items-center">
               <input
-                id="hs-radio-delete"
+                id="allDayEventConfig"
+                name="allDayEventConfig"
                 type="radio"
                 className="rounded-full border-gray-200 text-blue-600 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-800 dark:checked:border-blue-500 dark:checked:bg-blue-500 dark:focus:ring-offset-gray-800"
                 aria-describedby="hs-radio-delete-description"
                 value={AllDayEventConfigEnum.NoAllDay}
-                {...register("allDayEventConfig")}
-                onChange={(e) => {
-                  setValue("allDayEventConfig", e.target.value);
-                }}
               />
             </div>
             <label htmlFor="hs-radio-delete" className="ms-3">
@@ -268,15 +251,12 @@ const Form = () => {
           <div className="relative flex items-start">
             <div className="mt-1 flex h-5 items-center">
               <input
-                id="hs-radio-archive"
+                id="allDayEventConfig"
+                name="allDayEventConfig"
                 type="radio"
                 className="rounded-full border-gray-200 text-blue-600 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-800 dark:checked:border-blue-500 dark:checked:bg-blue-500 dark:focus:ring-offset-gray-800"
                 aria-describedby="hs-radio-archive-description"
                 value={AllDayEventConfigEnum.Busy}
-                {...register("allDayEventConfig")}
-                onChange={(e) => {
-                  setValue("allDayEventConfig", e.target.value);
-                }}
               />
             </div>
             <label htmlFor="hs-radio-archive" className="ms-3">
@@ -295,16 +275,13 @@ const Form = () => {
           <div className="relative flex items-start">
             <div className="mt-1 flex h-5 items-center">
               <input
-                id="hs-radio-archive"
+                id="allDayEventConfig"
+                name="allDayEventConfig"
                 type="radio"
                 className="-blue-500 rounded-full border-gray-200 text-blue-600
                     focus:ring dark:border-gray-700 dark:bg-gray-800 dark:checked:border-blue-500 dark:checked:bg-blue-500 dark:focus:ring-offset-gray-800"
                 aria-describedby="hs-radio-archive-description"
                 value={AllDayEventConfigEnum.All}
-                {...register("allDayEventConfig")}
-                onChange={(e) => {
-                  setValue("allDayEventConfig", e.target.value);
-                }}
               />
             </div>
             <label htmlFor="hs-radio-archive" className="ms-3">
@@ -325,12 +302,6 @@ const Form = () => {
       {/* Save option */}
       <div className="mt-8 flex justify-end">
         <SubmitButton />
-        {/* <button
-          type="submit"
-          className="inline-flex items-center gap-x-2 self-end rounded-lg border border-transparent bg-gray-800 px-4 py-3 text-sm font-semibold text-white hover:bg-gray-900 disabled:pointer-events-none disabled:opacity-50 dark:bg-white dark:text-gray-800 hover:dark:bg-gray-200 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
-        >
-          Save
-        </button> */}
       </div>
 
       {/* Delete option as danger */}

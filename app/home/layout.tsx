@@ -9,7 +9,7 @@ export default function Layout({
 }) {
   return (
     <section className="flex">
-      <section className="flex w-64 flex-col">
+      <section className="hidden w-64 flex-col lg:inline-block">
         {/* <!-- Navigation Toggle --> */}
         {/* <button
           type="button"
@@ -369,7 +369,9 @@ export default function Layout({
           </nav>
         </div>
       </section>
-      <section className="flex flex-1 flex-col">{children}</section>
+      <section className="flex flex-1 flex-col items-center lg:px-8">
+        <div className="w-full max-w-screen-lg">{children}</div>
+      </section>
     </section>
   );
 }

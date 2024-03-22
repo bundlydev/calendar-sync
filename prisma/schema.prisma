@@ -83,22 +83,23 @@ model Credential {
 }
 
 model Calendar {
-  id        String    @id @default(cuid())
-  name        String
-  provider Provider @relation(fields: [providerId], references: [id])
-  providerId  String
-  credential   Credential   @relation(fields: [credentialId], references: [id])
-  credentialId String
-  externalId  String
-  timeZone    String?
-  accessRole  String?
+  id              String    @id @default(cuid())
+  name            String
+  provider        Provider @relation(fields: [providerId], references: [id])
+  providerId      String
+  credential      Credential   @relation(fields: [credentialId], references: [id])
+  credentialId    String
+  externalId      String
+  timeZone        String?
+  accessRole      String?
   backgroundColor String?
   foregroundColor String?
-  selected    Boolean?
-  primary     Boolean?
-  kind        String?
-  etag        String?
-  colorId     String?
+  selected        Boolean?
+  primary         Boolean?
+  kind            String?
+  etag            String?
+  colorId         String?
+  notifications   Notification[] 
 }
 
 model Provider {
@@ -171,6 +172,8 @@ model Notification {
   calendarSyncTask    CalendarSyncTask @relation(name: "notifications", fields: [calendarSyncTaskId], references: [id], onDelete: Cascade)
   credentialId        String     
   credential          Credential @relation(name: "notifications", fields: [credentialId], references: [id], onDelete: NoAction)
+  calendarId          String
+  calendar            Calendar? @relation(fields: [calendarId], references: [id], onDelete: NoAction)
 
   @@index([credentialId, expiration])
   @@index([watchUuid, expiration])

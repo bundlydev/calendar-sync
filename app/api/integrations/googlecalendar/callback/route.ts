@@ -260,7 +260,9 @@ export const GET = auth(async (req: NextAuthRequest) => {
     }),
   });
 
-  return NextResponse.redirect(`${calendsyncWebsiteURL}/home?success=true`);
+  return NextResponse.redirect(
+    `${calendsyncWebsiteURL}/home/synchro?success=true`,
+  );
 });
 
 // calendarList {
