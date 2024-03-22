@@ -1,13 +1,13 @@
 import { PrismaAdapter } from "@auth/prisma-adapter";
-import { PrismaClient } from "@prisma/client";
 import NextAuth, { type NextAuthConfig } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import Google from "next-auth/providers/google";
 
-const prisma = new PrismaClient();
+import { prisma } from "./lib/prisma";
 
+const adapter = PrismaAdapter(prisma);
 export const config = {
-  adapter: PrismaAdapter(prisma),
+  adapter: adapter,
   basePath: "/auth",
   providers: [
     CredentialsProvider({
@@ -49,7 +49,7 @@ export const config = {
   ],
   callbacks: {
     signIn({ user, account, profile, email, credentials }) {
-      console.log({ user, account, profile, email, credentials });
+      // console.log({ user, account, profile, email, credentials });
       const isAllowedToSignIn = true;
       if (isAllowedToSignIn) {
         return true;
@@ -72,11 +72,11 @@ export const config = {
         }
         session.user.id = user?.id;
       }
-      console.log({ session });
+      // console.log({ session });
       return session;
     },
     authorized({ request, auth }) {
-      console.log({ request, auth });
+      // console.log({ request, auth });
       // const { pathname } = request.nextUrl;
       // if (pathname === "/middleware-example") return !!auth;
       return true;

@@ -1,12 +1,12 @@
+import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
-import { auth } from "auth";
 
 const CalendarList = async () => {
   const session = await auth();
-  if (!session?.user?.id) {
+  if (!session || !session.user || !session.user.id) {
     return null;
   }
-  const list = await prisma.credential.findMany({
+  const calendarList = await prisma.credential.findMany({
     where: {
       userId: session.user.id,
     },
@@ -26,12 +26,13 @@ const CalendarList = async () => {
 
   return (
     <>
-      <h1>Calendar List</h1>
-      <ol>
-        {list.map((credential) => (
-          <li key={credential.id}>{credential.calendars[0]?.name}</li>
-        ))}
-      </ol>
+      {calendarList?.map((credential) => {
+        return (
+          <option value={credential.id} key={credential.id}>
+            {credential.calendars[0]?.name}
+          </option>
+        );
+      })}
     </>
   );
 };
