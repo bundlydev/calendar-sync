@@ -24,7 +24,7 @@ class GoogleEvents {
 
   public async getEvents(props: IGoogleEventsProps) {
     const {
-      maxResults = 10,
+      maxResults = 100,
       timeMin = new Date().toISOString(),
       timeMax,
     } = props;
